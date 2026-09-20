@@ -11,7 +11,7 @@
   <!-- Navigazioa -->
   <header>
     <div class="container nav-container">
-      <h1 class="logo">Txaran<span>GORA</span> 💪🏻💜</h1>
+      <h1 class="logo">Txaran<span>GORA</span></h1>
       <nav>
         <ul>
           <li><a href="#hasiera">Hasiera</a></li>
@@ -61,7 +61,6 @@
   <h3>💜 Poteo Feministak</h3>
   <p>Tolosaldean zein Euskal Herriko beste hainbat txokotan poteo feminista eta jai berdinzaleak alaitzen ditugu.</p>
   
-  <!-- Herrien Nabigatzailea -->
   <div class="poteo-slider-container">
     <span class="slider-label">Aukeratu herria eta klikatu argazkiak ikusteko:</span>
     <div class="poteo-slider">
@@ -78,6 +77,7 @@
     </div>
   </div>
 </div>
+
 
 <!-------------------------------------------------------------------->
 
@@ -234,23 +234,7 @@
 
 <!--           Argazkiak ikusteko scripta         -->
 <script>
-  // Herrien zerrenda. Bakarrik Nextcloud-eko karpeta publikoaren esteka 
-  // eta lehenengo argazkiaren izena (?file=1.jpg) jarri behar dituzu.
-  const tokiak = [
-    { 
-      izena: "Tolosa", 
-      esteka: "https://ni.eus/s/ZURE_TOLOSA_TOKENA?file=1.jpg" 
-    },
-    { 
-      izena: "Irun", 
-      esteka: "https://hodeia.ni.eus/s/gg6CqgWmgsY5LQ5?file=IMG_20260605_184437.jpg" 
-    },
-    { 
-      izena: "Villabona", 
-      esteka: "https://ni.eus/s/ZURE_VILLABONA_TOKENA?file=1.jpg" 
-    }
-  ];
-
+  const tokiak = ["Tolosa", "Irun", "Villabona"];
   let currentIndex = 0;
 
   const locationNameEl = document.getElementById("locationName");
@@ -259,25 +243,25 @@
   const nextBtn = document.getElementById("nextBtn");
 
   function updateSlider() {
-    locationNameEl.textContent = tokiak[currentIndex].izena;
-    locationLinkEl.href = tokiak[currentIndex].esteka;
+    const herria = tokiak[currentIndex];
+    locationNameEl.textContent = herria;
+    // galeria.html orrira bideratzen du herriaren izenarekin
+    locationLinkEl.href = `galeria.html?herria=${encodeURIComponent(herria)}`;
   }
 
-  // Hasieratu
   updateSlider();
 
-  // Ezkerreko hirukia (Aurrekoa)
   prevBtn.addEventListener("click", () => {
     currentIndex = (currentIndex - 1 + tokiak.length) % tokiak.length;
     updateSlider();
   });
 
-  // Eskuineko hirukia (Hurrengoa)
   nextBtn.addEventListener("click", () => {
     currentIndex = (currentIndex + 1) % tokiak.length;
     updateSlider();
   });
 </script>
+
 
 
 
