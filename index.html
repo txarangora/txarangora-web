@@ -133,39 +133,5 @@
     </div>
   </footer>
 
-<script>
-  // Tokien zerrenda eta beren Nextcloud estekak
-  const tokiak = [
-    { izena: "Tolosa", esteka: "https://ni.eus/s/zure-tolosa-esteka" },
-    { izena: "Irun2026", esteka: "https://hodeia.ni.eus/s/gg6CqgWmgsY5LQ5?=IMG_20260605_184437.jpg" },
-    { izena: "Villabona", esteka: "https://ni.eus/s/zure-villabona-esteka" }
-    // Nahi adina toki gehi ditzakezu hemen beren estekekin!
-  ];
-
-  let currentIndex = 0;
-
-  const locationNameEl = document.getElementById("locationName");
-  const locationLinkEl = document.getElementById("locationLink");
-  const prevBtn = document.getElementById("prevBtn");
-  const nextBtn = document.getElementById("nextBtn");
-
-  function updateSlider() {
-    locationNameEl.textContent = tokiak[currentIndex].izena;
-    locationLinkEl.href = tokiak[currentIndex].esteka;
-  }
-
-  // Ezkerreko botoia (Aurrekoa)
-  prevBtn.addEventListener("click", () => {
-    currentIndex = (currentIndex - 1 + tokiak.length) % tokiak.length;
-    updateSlider();
-  });
-
-  // Eskuineko botoia (Hurrengoa)
-  nextBtn.addEventListener("click", () => {
-    currentIndex = (currentIndex + 1) % tokiak.length;
-    updateSlider();
-  });
-</script>  
-
 </body>
 </html>
