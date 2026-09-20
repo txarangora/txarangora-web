@@ -3,6 +3,233 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TxaranGORA | Argazki Galeria</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background-color: #0d0d0d;
+      color: white;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 15px;
+      overflow: hidden;
+    }
+
+    /* GOIBURUA: Izenburua eta Itxi botoia isolatuta, gainjar ez daitezen */
+    .gallery-header {
+      width: 100%;
+      max-width: 1000px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      z-index: 10;
+    }
+    .gallery-title { 
+      font-size: 1.4rem; 
+      color: #e1bee7; 
+      font-weight: bold;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .close-btn { 
+      color: #ffffff; 
+      font-size: 2.2rem; 
+      cursor: pointer; 
+      text-decoration: none; 
+      line-height: 1;
+      padding: 0 10px;
+      transition: color 0.2s;
+    }
+    .close-btn:hover { color: #e1bee7; }
+
+    /* ERDIALDEA: Irudia eta Geziak */
+    .main-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 1000px;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 10px 0;
+    }
+
+    .image-box {
+      max-width: 85%;
+      max-height: 75vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .image-box img {
+      max-width: 100%;
+      max-height: 75vh;
+      border-radius: 8px;
+      box-shadow: 0 4px 25px rgba(0,0,0,0.9);
+      object-fit: contain;
+    }
+
+    /* GEZIAK: Garbi sakatu ahal izateko z-index altuarekin */
+    .arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(123, 31, 162, 0.85);
+      color: white;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      font-size: 1.8rem;
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      border-radius: 50%;
+      transition: all 0.2s ease;
+      z-index: 100;
+      user-select: none;
+    }
+    .arrow:hover { 
+      background: #9c27b0; 
+      transform: translateY(-50%) scale(1.15); 
+      border-color: white;
+    }
+    .arrow.left { left: 5px; }
+    .arrow.right { right: 5px; }
+
+    /* BEHEALDEA: Kontagailua eta akatsen xehetasunak */
+    .footer-info {
+      text-align: center;
+      padding: 10px 0;
+      z-index: 10;
+    }
+    .counter { 
+      font-size: 1.1rem; 
+      color: #ddd; 
+      font-weight: 500;
+    }
+    .error-msg {
+      color: #ffb74d;
+      font-size: 0.9rem;
+      margin-top: 6px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- GOIBURUA -->
+  <div class="gallery-header">
+    <h1 class="gallery-title" id="townTitle">TxaranGORA - Galeria</h1>
+    <a href="javascript:history.back()" class="close-btn" title="Itxi">&times;</a>
+  </div>
+
+  <!-- ERDIALDEA -->
+  <div class="main-wrapper">
+    <button class="arrow left" id="prevImg" aria-label="Aurrekoa">◄</button>
+    
+    <div class="image-box">
+      <img id="mainImg" src="" alt="Galeriako argazkia">
+    </div>
+
+    <button class="arrow right" id="nextImg" aria-label="Hurrengoa">►</button>
+  </div>
+
+  <!-- BEHEALDEA -->
+  <div class="footer-info">
+    <div class="counter" id="imgCounter"></div>
+    <div id="errorDetails" class="error-msg"></div>
+  </div>
+
+  <script>
+    // 1. Zerrenda sortzeko funtzioa (irun2026/1.jpg, irun2026/2.jpg...)
+    function sortuZerrenda(karpeta, kopurua) {
+      const zerrenda = [];
+      for (let i = 1; i <= kopurua; i++) {
+        zerrenda.push(`${karpeta}/${i}.jpg`);
+      }
+      return zerrenda;
+    }
+
+    // 2. Egiaztatu hemen zure karpeta izenak eta benetako argazki kopurua:
+    const galeriak = {
+      "Tolosa": sortuZerrenda("tolosa2026", 12),
+      "Irun": sortuZerrenda("irun2026", 8),          // Egiaztatu 8 argazki badira Irunen
+      "Villabona": sortuZerrenda("villabona2026", 5)
+    };
+
+    // 3. URLtik herriaren izena jaso (?herria=Irun)
+    const urlParams = new URLSearchParams(window.location.search);
+    const herria = urlParams.get('herria') || "Irun";
+
+    // Izenburu garbia ezartzea
+    document.getElementById('townTitle').textContent = `TxaranGORA - ${herria}`;
+
+    const argazkiak = galeriak[herria] || [];
+    let currentIndex = 0;
+
+    const mainImg = document.getElementById('mainImg');
+    const imgCounter = document.getElementById('imgCounter');
+    const errorDetails = document.getElementById('errorDetails');
+
+    function showImage(index) {
+      errorDetails.textContent = "";
+      if (!argazkiak || argazkiak.length === 0) {
+        imgCounter.textContent = "Ez da argazkirik aurkitu herri honetarako.";
+        mainImg.style.display = "none";
+        return;
+      }
+
+      currentIndex = index;
+      mainImg.src = argazkiak[currentIndex];
+      mainImg.style.display = "block";
+      imgCounter.textContent = `${currentIndex + 1} / ${argazkiak.length}`;
+    }
+
+    // Argazkiak kargatzean huts egiten badu (adibidez 2.jpg existitzen ez bada edo .JPG maiuskulaz badago)
+    mainImg.onerror = function() {
+      errorDetails.textContent = `⚠️ Ezin da kargatu: "${argazkiak[currentIndex]}" (Begiratu izena/luzapena GitHub-en)`;
+    };
+
+    // Gezien gertaerak
+    document.getElementById('prevImg').onclick = function(e) {
+      e.stopPropagation();
+      if (argazkiak.length === 0) return;
+      currentIndex = (currentIndex - 1 + argazkiak.length) % argazkiak.length;
+      showImage(currentIndex);
+    };
+
+    document.getElementById('nextImg').onclick = function(e) {
+      e.stopPropagation();
+      if (argazkiak.length === 0) return;
+      currentIndex = (currentIndex + 1) % argazkiak.length;
+      showImage(currentIndex);
+    };
+
+    // Teklatuko geziak (← eta →)
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'ArrowLeft') document.getElementById('prevImg').click();
+      if (e.key === 'ArrowRight') document.getElementById('nextImg').click();
+      if (e.key === 'Escape') history.back();
+    });
+
+    // Hasieratu galeria
+    showImage(0);
+  </script>
+</body>
+</html>
+
+<!DOCTYPE html>
+<html lang="eu">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>TxaranGORA | Galeria</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
