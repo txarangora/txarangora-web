@@ -132,6 +132,83 @@
       <p>&copy; 2026 TxaranGORA - Tolosaldeko Emakumeen Etxea</p>
     </div>
   </footer>
+<script>
+  // Herri bakoitzeko argazkien bilduma (Nextcloud-eko deskarga estekak edo irudi publikoak)
+  const herriak = [
+    {
+      izena: "Tolosa",
+      argazkiak: [
+        "https://ni.eus/s/zure-esteka/download?path=%2F&files=argazkia1.jpg",
+        "https://ni.eus/s/zure-esteka/download?path=%2F&files=argazkia2.jpg"
+      ]
+    },
+    {
+      izena: "Irun",
+      argazkiak: [
+        "https://ni.eus/s/irun-esteka/download?path=%2F&files=irun1.jpg",
+        "https://ni.eus/s/irun-esteka/download?path=%2F&files=irun2.jpg"
+      ]
+    }
+  ];
 
+  let currentHerriaIndex = 0;
+  let currentPhotoIndex = 0;
+
+  const locationNameEl = document.getElementById("locationName");
+  const openGalleryBtn = document.getElementById("openGalleryBtn");
+  const prevBtn = document.getElementById("prevBtn");
+  const nextBtn = document.getElementById("nextBtn");
+
+  const lightbox = document.getElementById("lightbox");
+  const lightboxImg = document.getElementById("lightboxImg");
+  const lightboxCaption = document.getElementById("lightboxCaption");
+  const lightboxClose = document.getElementById("lightboxClose");
+  const lightboxPrev = document.getElementById("lightboxPrev");
+  const lightboxNext = document.getElementById("lightboxNext");
+
+  function updateHerria() {
+    locationNameEl.textContent = herriak[currentHerriaIndex].izena;
+  }
+
+  prevBtn.addEventListener("click", () => {
+    currentHerriaIndex = (currentHerriaIndex - 1 + herriak.length) % herriak.length;
+    updateHerria();
+  });
+
+  nextBtn.addEventListener("click", () => {
+    currentHerriaIndex = (currentHerriaIndex + 1) % herriak.length;
+    updateHerria();
+  });
+
+  // Bisorea ireki herrian klik egitean
+  openGalleryBtn.addEventListener("click", () => {
+    currentPhotoIndex = 0;
+    showPhoto();
+    lightbox.classList.add("active");
+  });
+
+  function showPhoto() {
+    const list = herriak[currentHerriaIndex].argazkiak;
+    lightboxImg.src = list[currentPhotoIndex];
+    lightboxCaption.textContent = `${herriak[currentHerriaIndex].izena} (${currentPhotoIndex + 1} / ${list.length})`;
+  }
+
+  lightboxPrev.addEventListener("click", () => {
+    const list = herriak[currentHerriaIndex].argazkiak;
+    currentPhotoIndex = (currentPhotoIndex - 1 + list.length) % list.length;
+    showPhoto();
+  });
+
+  lightboxNext.addEventListener("click", () => {
+    const list = herriak[currentHerriaIndex].argazkiak;
+    currentPhotoIndex = (currentPhotoIndex + 1) % list.length;
+    showPhoto();
+  });
+
+  lightboxClose.addEventListener("click", () => {
+    lightbox.classList.remove("active");
+  });
+</script>
+  
 </body>
 </html>
