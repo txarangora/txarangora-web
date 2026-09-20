@@ -8,24 +8,23 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
     
     html, body {
-      width: 100%;
-      height: 100%;
+      width: 100vw;
+      height: 100vh;
       background-color: #0d0d0d;
       color: white;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       overflow: hidden;
     }
 
-    /* KONTENITZAILE NAGUSIA */
     .gallery-container {
       display: flex;
       flex-direction: column;
-      width: 100vw;
-      height: 100vh;
+      width: 100%;
+      height: 100%;
       position: relative;
     }
 
-    /* 1. GOIBURUA (Bakarra eta goian finkatua) */
+    /* 1. GOIBURUA */
     .top-bar {
       height: 60px;
       width: 100%;
@@ -33,7 +32,7 @@
       align-items: center;
       justify-content: space-between;
       padding: 0 25px;
-      background: rgba(0, 0, 0, 0.6);
+      background: rgba(0, 0, 0, 0.85);
       z-index: 200;
     }
 
@@ -41,20 +40,19 @@
       font-size: 1.3rem;
       color: #e1bee7;
       font-weight: 600;
-      letter-spacing: 0.5px;
     }
 
-    .close-link {
+    .close-btn {
       color: #ffffff;
-      font-size: 2.5rem;
+      font-size: 2.2rem;
       text-decoration: none;
       line-height: 1;
       cursor: pointer;
       transition: color 0.2s;
     }
-    .close-link:hover { color: #e1bee7; }
+    .close-btn:hover { color: #e1bee7; }
 
-    /* 2. ARGAZKI GUNEA (Irudia handi erakusteko) */
+    /* 2. ARGAZKI EREMUA */
     .image-area {
       flex: 1;
       display: flex;
@@ -66,23 +64,23 @@
     }
 
     .image-area img {
-      max-width: 95vw;
-      max-height: 80vh;
+      max-width: 90vw;
+      max-height: 78vh;
       width: auto;
       height: auto;
       object-fit: contain;
       border-radius: 6px;
-      box-shadow: 0 4px 30px rgba(0,0,0,0.9);
+      box-shadow: 0 4px 25px rgba(0,0,0,0.9);
     }
 
-    /* 3. GEZIAK (Bakarrak eta bazterretan) */
+    /* 3. GEZIAK */
     .nav-arrow {
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      background: rgba(123, 31, 162, 0.8);
+      background: rgba(123, 31, 162, 0.85);
       color: white;
-      border: none;
+      border: 1px solid rgba(255, 255, 255, 0.3);
       font-size: 1.8rem;
       width: 50px;
       height: 50px;
@@ -99,23 +97,29 @@
       background: #9c27b0;
       transform: translateY(-50%) scale(1.1);
     }
-    .nav-arrow.prev { left: 15px; }
-    .nav-arrow.next { right: 15px; }
+    .nav-arrow.prev { left: 20px; }
+    .nav-arrow.next { right: 20px; }
 
-    /* 4. BEHEKO KONTAGAILUA */
+    /* 4. BEHEALDEA */
     .bottom-bar {
-      height: 45px;
+      height: 50px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      background: rgba(0, 0, 0, 0.6);
+      background: rgba(0, 0, 0, 0.85);
       z-index: 200;
     }
 
     .counter-text {
       font-size: 1rem;
       color: #dddddd;
+    }
+
+    .error-msg {
+      color: #ffb74d;
+      font-size: 0.85rem;
+      margin-top: 3px;
     }
   </style>
 </head>
@@ -125,26 +129,10 @@
     <!-- GOIBURUA -->
     <div class="top-bar">
       <h1 id="townTitle">TxaranGORA - Galeria</h1>
-      <a href="javascript:void(0)" onclick="itxiGaleria()" class="close-link" title="Itxi">&times;</a>
-
-Eta beheko <script> atalean funtzio hau gehituta:
-
-function itxiGaleria() {
-  if (document.referrer && document.referrer.includes(window.location.host)) {
-    history.back();
-  } else {
-    window.location.href = "index.html"; // Zure orri nagusia
-  }
-}
-
-Aldaketa txiki honekin "X" sakatzean webguneko orri nagusira eramango zaitu atzera berriro! 🚀
-X botoiak orain funtzionatzen al du?
-Mugikorrerako swipe gestoa gehitu
-TxaranGORAren hurrengo ekitaldiak ikusi
-6 material 
+      <a href="index.html" class="close-btn" title="Itxi">&times;</a>
     </div>
 
-    <!-- ERDIALDEA: Irudia eta Geziak -->
+    <!-- ARGAZKI EREMUA -->
     <div class="image-area">
       <button class="nav-arrow prev" id="btnPrev" aria-label="Aurrekoa">◄</button>
       <img id="mainImg" src="" alt="Galeriako irudia">
@@ -154,75 +142,83 @@ TxaranGORAren hurrengo ekitaldiak ikusi
     <!-- BEHEALDEA -->
     <div class="bottom-bar">
       <div class="counter-text" id="imgCounter"></div>
+      <div class="error-msg" id="errorMsg"></div>
     </div>
   </div>
 
-<script>
-  // 1. Funtzioak GitHub-eko BENETAKO karpeta izena erabiltzen du (minuskulaz)
-  function sortuZerrenda(karpetaBenetakoa, kopurua) {
-    const zerrenda = [];
-    for (let i = 1; i <= kopurua; i++) {
-      zerrenda.push(`${karpetaBenetakoa}/${i}.jpg`);
+  <script>
+    // 1. Irudien bidea sortzeko funtzioa (adib. irun2026/1.jpg)
+    function sortuZerrenda(karpetaBenetakoa, kopurua) {
+      const zerrenda = [];
+      for (let i = 1; i <= kopurua; i++) {
+        zerrenda.push(`${karpetaBenetakoa}/${i}.jpg`);
+      }
+      return zerrenda;
     }
-    return zerrenda;
-  }
 
-  // 2. GALERIEN MAPA:
-  // - Ezkerrean ("Irun_2026"): URLko ?herria=Irun_2026 parametroarekin bat datorren GAKOA.
-  // - Eskuinan ("irun2026"): GitHub-eko KARPETA BENETAKOAREN izena.
-  const galeriak = {
-    "Irun_2026": sortuZerrenda("irun2026", 8),
-    "Tolosa_2026": sortuZerrenda("tolosa2026", 12),
-    "Villabona_2026": sortuZerrenda("villabona2026", 5)
-  };
+    // 2. GALERIEN MAPA:
+    // - Ezkerreko gakoa ("Irun_2026"): URLko ?herria=Irun_2026 parametroarekin bat dator.
+    // - Eskuinan ("irun2026"): GitHub-eko BENETAKO karpeta izena (minuskulaz).
+    const galeriak = {
+      "Irun_2026": sortuZerrenda("irun2026", 8),
+      "Tolosa_2026": sortuZerrenda("tolosa2026", 12),
+      "Villabona_2026": sortuZerrenda("villabona2026", 5)
+    };
 
-  // 3. URLtik herriaren gakoa jaso (?herria=Irun_2026)
-  const urlParams = new URLSearchParams(window.location.search);
-  const herria = urlParams.get('herria') || "Irun_2026";
+    // 3. URLtik parametroa irakurri (?herria=Irun_2026)
+    const urlParams = new URLSearchParams(window.location.search);
+    const herria = urlParams.get('herria') || "Irun_2026";
 
-  // Izenburuan beheko marraren ordez tartea jartzeko ("Irun 2026")
-  document.getElementById('townTitle').textContent = `TxaranGORA - ${herria.replace('_', ' ')}`;
+    // Izenburua erakutsi (beheko marra gabe: "TxaranGORA - Irun 2026")
+    document.getElementById('townTitle').textContent = `TxaranGORA - ${herria.replace('_', ' ')}`;
 
-  const argazkiak = galeriak[herria] || [];
-  let currentIndex = 0;
+    const argazkiak = galeriak[herria] || [];
+    let currentIndex = 0;
 
-  const mainImg = document.getElementById('mainImg');
-  const imgCounter = document.getElementById('imgCounter');
+    const mainImg = document.getElementById('mainImg');
+    const imgCounter = document.getElementById('imgCounter');
+    const errorMsg = document.getElementById('errorMsg');
 
-  function showImage(index) {
-    if (!argazkiak || argazkiak.length === 0) {
-      imgCounter.textContent = "Ez da argazkirik aurkitu herri honetarako.";
-      mainImg.style.display = "none";
-      return;
+    function showImage(index) {
+      errorMsg.textContent = "";
+      if (!argazkiak || argazkiak.length === 0) {
+        imgCounter.textContent = "Ez da argazkirik aurkitu herri honetarako.";
+        mainImg.style.display = "none";
+        return;
+      }
+      currentIndex = index;
+      mainImg.src = argazkiak[currentIndex];
+      mainImg.style.display = "block";
+      imgCounter.textContent = `${currentIndex + 1} / ${argazkiak.length}`;
     }
-    currentIndex = index;
-    mainImg.src = argazkiak[currentIndex];
-    mainImg.style.display = "block";
-    imgCounter.textContent = `${currentIndex + 1} / ${argazkiak.length}`;
-  }
 
-  // Gezien klik gertaerak
-  document.getElementById('btnPrev').onclick = function() {
-    if (argazkiak.length === 0) return;
-    currentIndex = (currentIndex - 1 + argazkiak.length) % argazkiak.length;
-    showImage(currentIndex);
-  };
+    // Irudiak kargatzean huts egiten badu:
+    mainImg.onerror = function() {
+      errorMsg.textContent = `Ezin da kargatu fitxategia: "${argazkiak[currentIndex]}"`;
+    };
 
-  document.getElementById('btnNext').onclick = function() {
-    if (argazkiak.length === 0) return;
-    currentIndex = (currentIndex + 1) % argazkiak.length;
-    showImage(currentIndex);
-  };
+    // Gezien gertaerak
+    document.getElementById('btnPrev').onclick = function() {
+      if (argazkiak.length === 0) return;
+      currentIndex = (currentIndex - 1 + argazkiak.length) % argazkiak.length;
+      showImage(currentIndex);
+    };
 
-  // Teklatuko geziak (← eta →)
-  document.addEventListener('keydown', function(e) {
-    if (e.key === 'ArrowLeft') document.getElementById('btnPrev').click();
-    if (e.key === 'ArrowRight') document.getElementById('btnNext').click();
-    if (e.key === 'Escape') history.back();
-  });
+    document.getElementById('btnNext').onclick = function() {
+      if (argazkiak.length === 0) return;
+      currentIndex = (currentIndex + 1) % argazkiak.length;
+      showImage(currentIndex);
+    };
 
-  // Hasieratu galeria
-  showImage(0);
-</script>
+    // Teklatuko geziak (← eta →) eta Escape
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'ArrowLeft') document.getElementById('btnPrev').click();
+      if (e.key === 'ArrowRight') document.getElementById('btnNext').click();
+      if (e.key === 'Escape') window.location.href = "index.html";
+    });
+
+    // Hasieratu galeria
+    showImage(0);
+  </script>
 </body>
 </html>
