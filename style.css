@@ -55,8 +55,8 @@ header {
   position: absolute;
   top: 0;
   left: 0;
-  width: 120px;
-  height: 120px;
+  width: 200px;
+  height: 200px;
   object-fit: contain;
   z-index: 101;
 }
