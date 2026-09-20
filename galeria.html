@@ -83,77 +83,66 @@
 
   <div class="caption" id="imgCounter"></div>
 
-  <script>
-    // Bakarrik herri bakoitzaren Nextcloud tokena jarri behar duzu hemen.
-    // Adibidez esteka https://ni.eus/s/a1b2c3d4 bada, tokena "a1b2c3d4" da.
-    const herriTokens = {
-      "Tolosa": "TOLOSA_TOKENA_HEMEN",
-      "Irun": "gg6CqgWmgsY5LQ5",
-      "Villabona": "VILLABONA_TOKENA_HEMEN"
-    };
-
-    const urlParams = new URLSearchParams(window.location.search);
-    const herria = urlParams.get('herria') || "Tolosa";
-    document.getElementById('townTitle').textContent = `TxaranGORA - ${herria}`;
-
-    const token = herriTokens[herria];
-    let images = [];
-    let currentIndex = 0;
-
-    const mainImg = document.getElementById('mainImg');
-    const loading = document.getElementById('loading');
-    const imgCounter = document.getElementById('imgCounter');
-
-    // Nextcloud-eko fitxategi zerrenda automatikoki irakurri ( WebDAV bidez )
-    if (token) {
-      fetch('https://ni.eus/public.php/webdav/', {
-        method: 'PROPFIND',
-        headers: { 'Authorization': 'Basic ' + btoa(token + ':') }
-      })
-      .then(res => res.text())
-      .then(xmlText => {
-        const parser = new DOMParser();
-        const xml = parser.parseFromString(xmlText, "text/xml");
-        const hrefs = Array.from(xml.querySelectorAll("href, d\\:href"));
-        
-        images = hrefs
-          .map(h => h.textContent)
-          .filter(path => /\.(jpg|jpeg|png|gif|webp)\$/i.test(path))
-          .map(path => {
-            const fileName = path.split('/').pop();
-            return `https://ni.eus/s/${token}/download?path=&files=${encodeURIComponent(fileName)}`;
-          });
-
-        if (images.length > 0) {
-          loading.style.display = 'none';
-          mainImg.style.display = 'block';
-          showImage(0);
-        } else {
-          loading.textContent = "Ez da argazkirik aurkitu karpeta honetan.";
-        }
-      })
-      .catch(() => {
-        loading.textContent = "Errorea kargatzean. Egiaztatu esteka eta baimenak.";
-      });
+<script>
+  // 1. Laguntza-funtzioa: irudi guztiak automatikoki zerrendatzeko
+  function sortuZerrenda(herria, aurrizkia, kopurua) {
+    const zerrenda = [];
+    for (let i = 1; i <= kopurua; i++) {
+      zerrenda.push(`irudiak/${herria}/${aurrizkia}_${i}.jpg`);
     }
+    return zerrenda;
+  }
 
-    function showImage(index) {
-      if (images.length === 0) return;
-      currentIndex = index;
-      mainImg.src = images[currentIndex];
-      imgCounter.textContent = `${currentIndex + 1} / ${images.length}`;
+  // 2. Hemen BAKARRIK adierazi herri bakoitzean ZENBAT ARGAZKI kargatu dituzun:
+  const galeriak = {
+    "Tolosa": sortuZerrenda("tolosa", "tolosa2026", 12),  // Adibidez: 12 argazki baldin badaude (1etik 12ra)
+    "Irun": sortuZerrenda("irun", "irun2026", 8),        // Adibidez: 8 argazki baldin badaude (1etik 8ra)
+    "Villabona": sortuZerrenda("villabona", "villabona2026", 5) // Adibidez: 5 argazki
+  };
+
+  // URLtik herriaren izena jaso (?herria=Tolosa)
+  const urlParams = new URLSearchParams(window.location.search);
+  const herria = urlParams.get('herria') || "Tolosa";
+  document.getElementById('townTitle').textContent = `TxaranGORA - ${herria}`;
+
+  // Uneko herriaren argazkien zerrenda
+  const argazkiak = galeriak[herria] || [];
+  let currentIndex = 0;
+
+  const mainImg = document.getElementById('mainImg');
+  const imgCounter = document.getElementById('imgCounter');
+
+  // Argazkia erakusteko funtzioa
+  function showImage(index) {
+    if (!argazkiak || argazkiak.length === 0) {
+      imgCounter.innerHTML = "<span style='color:#ffb74d;'>Ez da argazkirik aurkitu herri honetarako.</span>";
+      mainImg.style.display = "none";
+      return;
     }
+    currentIndex = index;
+    mainImg.src = argazkiak[currentIndex];
+    mainImg.style.display = "block";
+    imgCounter.textContent = `${currentIndex + 1} / ${argazkiak.length}`;
+  }
 
-    document.getElementById('prevImg').addEventListener('click', () => {
-      currentIndex = (currentIndex - 1 + images.length) % images.length;
-      showImage(currentIndex);
-    });
+  // Ezkerreko gezia (Aurrekoa)
+  document.getElementById('prevImg').addEventListener('click', () => {
+    if (argazkiak.length === 0) return;
+    currentIndex = (currentIndex - 1 + argazkiak.length) % argazkiak.length;
+    showImage(currentIndex);
+  });
 
-    document.getElementById('nextImg').addEventListener('click', () => {
-      currentIndex = (currentIndex + 1) % images.length;
-      showImage(currentIndex);
-    });
-  </script>
+  // Eskuineko gezia (Hurrengoa)
+  document.getElementById('nextImg').addEventListener('click', () => {
+    if (argazkiak.length === 0) return;
+    currentIndex = (currentIndex + 1) % argazkiak.length;
+    showImage(currentIndex);
+  });
+
+  // Hasieratu galeria
+  showImage(0);
+</script>
+
 </body>
 </html>
 
