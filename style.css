@@ -45,8 +45,20 @@ header {
 }
 
 .logo {
-  font-size: 1.8rem;
-  color: var(--primary-color);
+  position: relative;
+  margin: 0;
+  height: 80px;
+  z-index: 100;
+}
+
+.logo img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 120px;
+  height: 120px;
+  object-fit: contain;
+  z-index: 101;
 }
 
 .logo span {
