@@ -201,4 +201,207 @@ footer {
   .hero h2 {
     font-size: 1.8rem;
   }
+}/* Oinarrizko ezarpenak */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.6;
+  color: #333;
+  background-color: #fdfafc;
+}
+
+.container {
+  width: 90%;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* Kolore feministak */
+:root {
+  --primary-color: #7b1fa2;
+  --primary-hover: #5c007a;
+  --accent-color: #e1bee7;
+  --dark-bg: #4a148c;
+  --light-bg: #f3e5f5;
+  --text-dark: #212121;
+}
+
+/* Header & Nav */
+header {
+  background-color: #fff;
+  border-bottom: 3px solid var(--primary-color);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.nav-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+}
+
+.logo {
+  font-size: 1.8rem;
+  color: var(--primary-color);
+}
+
+.logo span {
+  color: var(--dark-bg);
+  font-weight: 800;
+}
+
+nav ul {
+  display: flex;
+  list-style: none;
+  gap: 1.5rem;
+}
+
+nav a {
+  text-decoration: none;
+  color: #555;
+  font-weight: 600;
+  transition: color 0.3s;
+}
+
+nav a:hover {
+  color: var(--primary-color);
+}
+
+/* Hero Section */
+.hero {
+  background: linear-gradient(135deg, var(--primary-color), var(--dark-bg));
+  color: #fff;
+  padding: 5rem 0;
+  text-align: center;
+}
+
+.hero h2 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.hero p {
+  font-size: 1.2rem;
+  max-width: 700px;
+  margin: 0 auto 2rem auto;
+}
+
+.btn {
+  display: inline-block;
+  background-color: #fff;
+  color: var(--primary-color);
+  padding: 0.8rem 1.8rem;
+  border-radius: 25px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: background 0.3s, color 0.3s;
+}
+
+.btn:hover {
+  background-color: var(--accent-color);
+  color: var(--dark-bg);
+}
+
+/* Sections */
+.section {
+  padding: 4rem 0;
+}
+
+.section-title {
+  text-align: center;
+  font-size: 2rem;
+  color: var(--primary-color);
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.section-title.light {
+  color: #fff;
+}
+
+.intro-text {
+  font-size: 1.15rem;
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.bg-light {
+  background-color: var(--light-bg);
+}
+
+.bg-dark {
+  background-color: var(--dark-bg);
+  color: #fff;
+}
+
+/* Cards Grid */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+}
+
+.card {
+  background-color: #fff;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+  border-top: 4px solid var(--primary-color);
+}
+
+.card h3 {
+  color: var(--primary-color);
+  margin-bottom: 1rem;
+}
+
+/* Info box & Contact */
+.info-box {
+  background-color: #fff;
+  border: 2px dashed var(--primary-color);
+  padding: 2rem;
+  border-radius: 10px;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.info-box ul {
+  margin-top: 1rem;
+  margin-left: 1.5rem;
+}
+
+.contact-details {
+  text-align: center;
+  font-size: 1.1rem;
+}
+
+.contact-details a {
+  color: var(--accent-color);
+}
+
+/* Footer */
+footer {
+  background-color: #222;
+  color: #bbb;
+  text-align: center;
+  padding: 1.5rem 0;
+  font-size: 0.9rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .nav-container {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .hero h2 {
+    font-size: 1.8rem;
+  }
 }
