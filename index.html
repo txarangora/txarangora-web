@@ -55,38 +55,10 @@
           <p>Ostiral Mehean, 19:00etan Andragoratik abiatuta, Tolosako kaleak musikaz eta aldarrikapenez betetzen ditugu gure kalejirarekin.</p>
         </div>
 
-<div class="card">
-  <h3>💜 Poteo Feministak</h3>
-  <p>Tolosaldean zein Euskal Herriko beste hainbat txokotan poteo feminista eta jai berdinzaleak alaitzen ditugu.</p>
-  
-  <div class="poteo-slider-container">
-    <span class="slider-label">Aukeratu herria eta klikatu argazkiak ikusteko:</span>
-    <div class="poteo-slider">
-      <button class="slider-btn" id="prevBtn" aria-label="Aurrekoa">&lt;</button>
-      
-      <div class="slider-content">
-        <button id="openGalleryBtn" class="location-card">
-          <span class="location-icon">📍</span>
-          <span id="locationName">Tolosa</span>
-        </button>
-      </div>
-      
-      <button class="slider-btn" id="nextBtn" aria-label="Hurrengoa">&gt;</button>
-    </div>
-  </div>
-</div>
-<!-- Webguneko Argazki-Bisorea (Lightbox Modal-a) -->
-<div id="lightbox" class="lightbox">
-  <span class="lightbox-close" id="lightboxClose">&times;</span>
-  <button class="lightbox-arrow left" id="lightboxPrev">&lt;</button>
-  
-  <div class="lightbox-content">
-    <img id="lightboxImg" src="" alt="Poteo argazkia">
-    <div id="lightboxCaption" class="lightbox-caption"></div>
-  </div>
-  
-  <button class="lightbox-arrow right" id="lightboxNext">&gt;</button>
-</div>
+        <div class="card">
+          <h3>💜 Poteo Feministak</h3>
+          <p>Tolosaldean zein Euskal Herriko beste hainbat txokotan (Irunen adibidez) poteo feminista eta jai berdinzaleak alaitzen ditugu.</p>
+        </div>
 
 
 
@@ -132,83 +104,6 @@
       <p>&copy; 2026 TxaranGORA - Tolosaldeko Emakumeen Etxea</p>
     </div>
   </footer>
-<script>
-  // Herri bakoitzeko argazkien bilduma (Nextcloud-eko deskarga estekak edo irudi publikoak)
-  const herriak = [
-    {
-      izena: "Tolosa",
-      argazkiak: [
-        "https://ni.eus/s/zure-esteka/download?path=%2F&files=argazkia1.jpg",
-        "https://ni.eus/s/zure-esteka/download?path=%2F&files=argazkia2.jpg"
-      ]
-    },
-    {
-      izena: "Irun",
-      argazkiak: [
-        "https://hodeia.ni.eus/s/gg6CqgWmgsY5LQ5/download?path=%2F&files=IMG_20260605_184437.jpg",
-        "https://ni.eus/s/irun-esteka/download?path=%2F&files=irun2.jpg"
-      ]
-    }
-  ];
-
-  let currentHerriaIndex = 0;
-  let currentPhotoIndex = 0;
-
-  const locationNameEl = document.getElementById("locationName");
-  const openGalleryBtn = document.getElementById("openGalleryBtn");
-  const prevBtn = document.getElementById("prevBtn");
-  const nextBtn = document.getElementById("nextBtn");
-
-  const lightbox = document.getElementById("lightbox");
-  const lightboxImg = document.getElementById("lightboxImg");
-  const lightboxCaption = document.getElementById("lightboxCaption");
-  const lightboxClose = document.getElementById("lightboxClose");
-  const lightboxPrev = document.getElementById("lightboxPrev");
-  const lightboxNext = document.getElementById("lightboxNext");
-
-  function updateHerria() {
-    locationNameEl.textContent = herriak[currentHerriaIndex].izena;
-  }
-
-  prevBtn.addEventListener("click", () => {
-    currentHerriaIndex = (currentHerriaIndex - 1 + herriak.length) % herriak.length;
-    updateHerria();
-  });
-
-  nextBtn.addEventListener("click", () => {
-    currentHerriaIndex = (currentHerriaIndex + 1) % herriak.length;
-    updateHerria();
-  });
-
-  // Bisorea ireki herrian klik egitean
-  openGalleryBtn.addEventListener("click", () => {
-    currentPhotoIndex = 0;
-    showPhoto();
-    lightbox.classList.add("active");
-  });
-
-  function showPhoto() {
-    const list = herriak[currentHerriaIndex].argazkiak;
-    lightboxImg.src = list[currentPhotoIndex];
-    lightboxCaption.textContent = `${herriak[currentHerriaIndex].izena} (${currentPhotoIndex + 1} / ${list.length})`;
-  }
-
-  lightboxPrev.addEventListener("click", () => {
-    const list = herriak[currentHerriaIndex].argazkiak;
-    currentPhotoIndex = (currentPhotoIndex - 1 + list.length) % list.length;
-    showPhoto();
-  });
-
-  lightboxNext.addEventListener("click", () => {
-    const list = herriak[currentHerriaIndex].argazkiak;
-    currentPhotoIndex = (currentPhotoIndex + 1) % list.length;
-    showPhoto();
-  });
-
-  lightboxClose.addEventListener("click", () => {
-    lightbox.classList.remove("active");
-  });
-</script>
   
 </body>
 </html>
