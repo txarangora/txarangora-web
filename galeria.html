@@ -157,77 +157,72 @@ TxaranGORAren hurrengo ekitaldiak ikusi
     </div>
   </div>
 
-  <script>
-    // 1. Irudien bidea sortzeko funtzioa (adib. irun2026/1.jpg)
-    function sortuZerrenda(karpeta, kopurua) {
-      const zerrenda = [];
-      for (let i = 1; i <= kopurua; i++) {
-        zerrenda.push(`${karpeta}/${i}.jpg`);
-      }
-      return zerrenda;
+<script>
+  // 1. Funtzioak GitHub-eko BENETAKO karpeta izena erabiltzen du (minuskulaz)
+  function sortuZerrenda(karpetaBenetakoa, kopurua) {
+    const zerrenda = [];
+    for (let i = 1; i <= kopurua; i++) {
+      zerrenda.push(`${karpetaBenetakoa}/${i}.jpg`);
     }
-
-    // 2. Herri bakoitzaren karpeta eta argazki kopurua
-    const galeriak = {
-      "Irun_2026": sortuZerrenda("irun2026", 8),
-      "Tolosa": sortuZerrenda("tolosa2026", 12),
-      "Villabona": sortuZerrenda("villabona2026", 5)
-    };
-
-    // 3. URLtik herria irakurri (?herria=Irun_2026)
-    const urlParams = new URLSearchParams(window.location.search);
-    const herria = urlParams.get('herria') || "Irun_2026";
-
-    document.getElementById('townTitle').textContent = `TxaranGORA - ${herria}`;
-
-    const argazkiak = galeriak[herria] || [];
-    let currentIndex = 0;
-
-    const mainImg = document.getElementById('mainImg');
-    const imgCounter = document.getElementById('imgCounter');
-
-    function showImage(index) {
-      if (!argazkiak || argazkiak.length === 0) {
-        imgCounter.textContent = "Ez da argazkirik aurkitu.";
-        mainImg.style.display = "none";
-        return;
-      }
-      currentIndex = index;
-      mainImg.src = argazkiak[currentIndex];
-      mainImg.style.display = "block";
-      imgCounter.textContent = `${currentIndex + 1} / ${argazkiak.length}`;
-    }
-
-    // Gezien klik gertaerak
-    document.getElementById('btnPrev').onclick = function() {
-      if (argazkiak.length === 0) return;
-      currentIndex = (currentIndex - 1 + argazkiak.length) % argazkiak.length;
-      showImage(currentIndex);
-    };
-
-    document.getElementById('btnNext').onclick = function() {
-      if (argazkiak.length === 0) return;
-      currentIndex = (currentIndex + 1) % argazkiak.length;
-      showImage(currentIndex);
-    };
-
-    // Teklatuko geziak (← eta →)
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'ArrowLeft') document.getElementById('btnPrev').click();
-      if (e.key === 'ArrowRight') document.getElementById('btnNext').click();
-      if (e.key === 'Escape') history.back();
-    });
-
-  function itxiGaleria() {
-  if (document.referrer && document.referrer.includes(window.location.host)) {
-    history.back();
-  } else {
-    window.location.href = "index.html"; // Zure orri nagusia
+    return zerrenda;
   }
-}
 
-    // Hasieratu
-    showImage(0);
-  </script>
+  // 2. GALERIEN MAPA:
+  // - Ezkerrean ("Irun_2026"): URLko ?herria=Irun_2026 parametroarekin bat datorren GAKOA.
+  // - Eskuinan ("irun2026"): GitHub-eko KARPETA BENETAKOAREN izena.
+  const galeriak = {
+    "Irun_2026": sortuZerrenda("irun2026", 8),
+    "Tolosa_2026": sortuZerrenda("tolosa2026", 12),
+    "Villabona_2026": sortuZerrenda("villabona2026", 5)
+  };
+
+  // 3. URLtik herriaren gakoa jaso (?herria=Irun_2026)
+  const urlParams = new URLSearchParams(window.location.search);
+  const herria = urlParams.get('herria') || "Irun_2026";
+
+  // Izenburuan beheko marraren ordez tartea jartzeko ("Irun 2026")
+  document.getElementById('townTitle').textContent = `TxaranGORA - ${herria.replace('_', ' ')}`;
+
+  const argazkiak = galeriak[herria] || [];
+  let currentIndex = 0;
+
+  const mainImg = document.getElementById('mainImg');
+  const imgCounter = document.getElementById('imgCounter');
+
+  function showImage(index) {
+    if (!argazkiak || argazkiak.length === 0) {
+      imgCounter.textContent = "Ez da argazkirik aurkitu herri honetarako.";
+      mainImg.style.display = "none";
+      return;
+    }
+    currentIndex = index;
+    mainImg.src = argazkiak[currentIndex];
+    mainImg.style.display = "block";
+    imgCounter.textContent = `${currentIndex + 1} / ${argazkiak.length}`;
+  }
+
+  // Gezien klik gertaerak
+  document.getElementById('btnPrev').onclick = function() {
+    if (argazkiak.length === 0) return;
+    currentIndex = (currentIndex - 1 + argazkiak.length) % argazkiak.length;
+    showImage(currentIndex);
+  };
+
+  document.getElementById('btnNext').onclick = function() {
+    if (argazkiak.length === 0) return;
+    currentIndex = (currentIndex + 1) % argazkiak.length;
+    showImage(currentIndex);
+  };
+
+  // Teklatuko geziak (← eta →)
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'ArrowLeft') document.getElementById('btnPrev').click();
+    if (e.key === 'ArrowRight') document.getElementById('btnNext').click();
+    if (e.key === 'Escape') history.back();
+  });
+
+  // Hasieratu galeria
+  showImage(0);
+</script>
 </body>
 </html>
