@@ -55,10 +55,31 @@
           <p>Ostiral Mehean, 19:00etan Andragoratik abiatuta, Tolosako kaleak musikaz eta aldarrikapenez betetzen ditugu gure kalejirarekin.</p>
         </div>
 
-        <div class="card">
-          <h3>💜 Poteo Feministak</h3>
-          <p>Tolosaldean zein Euskal Herriko beste hainbat txokotan (Irunen adibidez) poteo feminista eta jai berdinzaleak alaitzen ditugu.</p>
-        </div>
+<!-- Poteo feminista atalean argazkiak ikusteko -->
+
+<div class="card">
+  <h3>💜 Poteo Feministak</h3>
+  <p>Tolosaldean zein Euskal Herriko beste hainbat txokotan poteo feminista eta jai berdinzaleak alaitzen ditugu.</p>
+  
+  <!-- Herrien Nabigatzailea -->
+  <div class="poteo-slider-container">
+    <span class="slider-label">Aukeratu herria eta klikatu argazkiak ikusteko:</span>
+    <div class="poteo-slider">
+      <button class="slider-btn" id="prevBtn" aria-label="Aurrekoa">◄</button>
+      
+      <div class="slider-content">
+        <a id="locationLink" href="#" target="_blank" class="location-card">
+          <span class="location-icon">📍</span>
+          <span id="locationName">Tolosa</span>
+        </a>
+      </div>
+      
+      <button class="slider-btn" id="nextBtn" aria-label="Hurrengoa">►</button>
+    </div>
+  </div>
+</div>
+
+<!-------------------------------------------------------------------->
 
         <div class="card">
           <h3>🎶 Jabetze Eskola</h3>
@@ -210,6 +231,56 @@
       <p>&copy; 2026 TxaranGORA - Tolosaldeko Emakumeen Etxea</p>
     </div>
   </footer>
+
+<!--           Argazkiak ikusteko scripta         -->
+<script>
+  // Herrien zerrenda. Bakarrik Nextcloud-eko karpeta publikoaren esteka 
+  // eta lehenengo argazkiaren izena (?file=1.jpg) jarri behar dituzu.
+  const tokiak = [
+    { 
+      izena: "Tolosa", 
+      esteka: "https://ni.eus/s/ZURE_TOLOSA_TOKENA?file=1.jpg" 
+    },
+    { 
+      izena: "Irun", 
+      esteka: "https://ni.eus/s/ZURE_IRUN_TOKENA?file=1.jpg" 
+    },
+    { 
+      izena: "Villabona", 
+      esteka: "https://ni.eus/s/ZURE_VILLABONA_TOKENA?file=1.jpg" 
+    }
+  ];
+
+  let currentIndex = 0;
+
+  const locationNameEl = document.getElementById("locationName");
+  const locationLinkEl = document.getElementById("locationLink");
+  const prevBtn = document.getElementById("prevBtn");
+  const nextBtn = document.getElementById("nextBtn");
+
+  function updateSlider() {
+    locationNameEl.textContent = tokiak[currentIndex].izena;
+    locationLinkEl.href = tokiak[currentIndex].esteka;
+  }
+
+  // Hasieratu
+  updateSlider();
+
+  // Ezkerreko hirukia (Aurrekoa)
+  prevBtn.addEventListener("click", () => {
+    currentIndex = (currentIndex - 1 + tokiak.length) % tokiak.length;
+    updateSlider();
+  });
+
+  // Eskuineko hirukia (Hurrengoa)
+  nextBtn.addEventListener("click", () => {
+    currentIndex = (currentIndex + 1) % tokiak.length;
+    updateSlider();
+  });
+</script>
+
+
+
   
 </body>
 </html>
