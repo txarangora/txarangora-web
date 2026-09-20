@@ -125,7 +125,23 @@
     <!-- GOIBURUA -->
     <div class="top-bar">
       <h1 id="townTitle">TxaranGORA - Galeria</h1>
-      <a href="index.html" class="close-link" title="Itxi">&times;</a>
+      <a href="javascript:void(0)" onclick="itxiGaleria()" class="close-link" title="Itxi">&times;</a>
+
+Eta beheko <script> atalean funtzio hau gehituta:
+
+function itxiGaleria() {
+  if (document.referrer && document.referrer.includes(window.location.host)) {
+    history.back();
+  } else {
+    window.location.href = "index.html"; // Zure orri nagusia
+  }
+}
+
+Aldaketa txiki honekin "X" sakatzean webguneko orri nagusira eramango zaitu atzera berriro! 🚀
+X botoiak orain funtzionatzen al du?
+Mugikorrerako swipe gestoa gehitu
+TxaranGORAren hurrengo ekitaldiak ikusi
+6 material 
     </div>
 
     <!-- ERDIALDEA: Irudia eta Geziak -->
@@ -201,6 +217,14 @@
       if (e.key === 'ArrowRight') document.getElementById('btnNext').click();
       if (e.key === 'Escape') history.back();
     });
+
+  function itxiGaleria() {
+  if (document.referrer && document.referrer.includes(window.location.host)) {
+    history.back();
+  } else {
+    window.location.href = "index.html"; // Zure orri nagusia
+  }
+}
 
     // Hasieratu
     showImage(0);
