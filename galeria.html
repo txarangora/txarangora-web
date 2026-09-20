@@ -169,14 +169,14 @@ TxaranGORAren hurrengo ekitaldiak ikusi
 
     // 2. Herri bakoitzaren karpeta eta argazki kopurua
     const galeriak = {
-      "Irun": sortuZerrenda("irun2026", 8),
+      "Irun_2026": sortuZerrenda("irun2026", 8),
       "Tolosa": sortuZerrenda("tolosa2026", 12),
       "Villabona": sortuZerrenda("villabona2026", 5)
     };
 
-    // 3. URLtik herria irakurri (?herria=Irun)
+    // 3. URLtik herria irakurri (?herria=Irun_2026)
     const urlParams = new URLSearchParams(window.location.search);
-    const herria = urlParams.get('herria') || "Irun";
+    const herria = urlParams.get('herria') || "Irun_2026";
 
     document.getElementById('townTitle').textContent = `TxaranGORA - ${herria}`;
 
