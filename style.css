@@ -54,9 +54,9 @@ header {
 .logo img {
   position: absolute;
   top: 0;
-  left: 0;
-  width: 200px;
-  height: 200px;
+  left: -20px;
+  width: 180px;
+  height: 180px;
   object-fit: contain;
   z-index: 101;
 }
